@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:resume_builder/widgets/dialogs/pdf_viewer_dialog.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/constants/app_constants.dart';
 
 class HeroSection extends StatelessWidget {
@@ -21,7 +22,7 @@ class HeroSection extends StatelessWidget {
       ),
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50).copyWith(top: 120, bottom: 50),
+          padding: EdgeInsets.symmetric(horizontal: isMobile ? 24 : 50).copyWith(top: isMobile ? 80 : 120, bottom: 50),
           child: isMobile
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -57,7 +58,7 @@ class HeroSection extends StatelessWidget {
       Text(
         "Hello, I'm",
         style: TextStyle(
-          fontSize: isMobile ? 24 : 32,
+          fontSize: isMobile ? 20 : 32,
           fontWeight: FontWeight.w500,
           color: AppColors.primaryColor,
         ),
@@ -66,8 +67,9 @@ class HeroSection extends StatelessWidget {
       Text(
         AppConstants.name,
         style: TextStyle(
-          fontSize: isMobile ? 36 : 56,
+          fontSize: isMobile ? 30 : 56,
           fontWeight: FontWeight.bold,
+          letterSpacing: -1,
         ),
       ).animate().fadeIn(delay: 200.ms, duration: 500.ms).slideX(begin: -0.2),
       const SizedBox(height: 10),
@@ -99,14 +101,8 @@ class HeroSection extends StatelessWidget {
       Wrap(
         spacing: 20,
         runSpacing: 20,
+        alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
         children: [
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-            ),
-            child: const Text("Hire Me"),
-          ),
           OutlinedButton(
             onPressed: () {
               showDialog(
@@ -134,28 +130,41 @@ class HeroSection extends StatelessWidget {
       ).animate().fadeIn(delay: 600.ms, duration: 500.ms).scale(),
       const SizedBox(height: 40),
       Row(
+        mainAxisAlignment: isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
         children: [
-          _socialIcon(FontAwesomeIcons.github),
-          _socialIcon(FontAwesomeIcons.linkedin),
-          _socialIcon(FontAwesomeIcons.twitter),
+          _socialIcon(
+            FontAwesomeIcons.github,
+            () => _launchURL("https://github.com/arshadBridgeon"),
+          ),
+          _socialIcon(
+            FontAwesomeIcons.linkedin,
+            () => _launchURL("https://www.linkedin.com/in/muhammed-arshad-mc-3913b034a/"),
+          ),
         ],
       ).animate().fadeIn(delay: 800.ms, duration: 500.ms),
     ];
   }
 
-  Widget _socialIcon(dynamic icon) {
+  Future<void> _launchURL(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
+  Widget _socialIcon(dynamic icon, VoidCallback onTap) {
     return Padding(
       padding: const EdgeInsets.only(right: 20),
       child: IconButton(
         icon: FaIcon(icon, size: 28),
-        onPressed: () {},
+        onPressed: onTap,
         color: Colors.grey,
       ),
     );
   }
 
   Widget _buildProfileImage(bool isMobile) {
-    final double size = isMobile ? 250 : 300;
+    final double size = isMobile ? 220 : 300;
     return Center(
       child: Container(
         width: size,
@@ -172,7 +181,7 @@ class HeroSection extends StatelessWidget {
           ],
         ),
         child: ClipOval(
-          child: Image.network(
+          child: Image.asset(
             "assets/images/me.png",
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) {

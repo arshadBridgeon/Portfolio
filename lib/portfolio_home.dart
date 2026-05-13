@@ -10,7 +10,7 @@ import 'sections/contact/contact_section.dart';
 import 'sections/footer/footer_section.dart';
 
 import 'sections/services/services_section.dart';
-import 'sections/testimonials/testimonials_section.dart';
+import 'core/constants/app_constants.dart';
 
 class PortfolioHome extends StatefulWidget {
   const PortfolioHome({super.key});
@@ -30,7 +30,6 @@ class _PortfolioHomeState extends State<PortfolioHome> {
     const ServicesSection(),
     const ProjectsSection(),
     const ExperienceSection(),
-    const TestimonialsSection(),
     const ContactSection(),
     const FooterSection(),
   ];
@@ -69,10 +68,12 @@ class _PortfolioHomeState extends State<PortfolioHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: _buildEndDrawer(),
       body: Stack(
         children: [
           ScrollablePositionedList.builder(
             itemCount: _sections.length,
+            physics: const BouncingScrollPhysics(),
             itemBuilder: (context, index) => _sections[index],
             itemScrollController: _itemScrollController,
             itemPositionsListener: _itemPositionsListener,
@@ -87,6 +88,57 @@ class _PortfolioHomeState extends State<PortfolioHome> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildEndDrawer() {
+    final List<Map<String, dynamic>> menuItems = [
+      {"title": "Home", "index": 0},
+      {"title": "About", "index": 1},
+      {"title": "Skills", "index": 2},
+      {"title": "Services", "index": 3},
+      {"title": "Projects", "index": 4},
+      {"title": "Experience", "index": 5},
+      {"title": "Contact", "index": 6},
+    ];
+
+    return Drawer(
+      backgroundColor: AppColors.darkBg,
+      child: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 50),
+            ...menuItems.map((item) {
+              final bool isSelected = _selectedIndex == item["index"];
+              return ListTile(
+                title: Text(
+                  item["title"],
+                  style: TextStyle(
+                    color: isSelected ? AppColors.primaryColor : Colors.white,
+                    fontSize: 18,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _scrollTo(item["index"]);
+                },
+                trailing: isSelected
+                    ? const Icon(Icons.chevron_right, color: AppColors.primaryColor)
+                    : null,
+              );
+            }).toList(),
+            const Spacer(),
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Text(
+                "© ${DateTime.now().year} ${AppConstants.name}",
+                style: const TextStyle(color: Colors.grey, fontSize: 12),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

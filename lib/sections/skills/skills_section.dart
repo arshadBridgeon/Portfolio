@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../core/constants/app_constants.dart';
 
 class SkillsSection extends StatelessWidget {
@@ -7,28 +8,41 @@ class SkillsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < AppConstants.mobileBreakpoint;
+    
     final List<Map<String, dynamic>> skills = [
-      {"name": "Flutter", "level": 0.95},
-      {"name": "Dart", "level": 0.90},
-      {"name": "Firebase", "level": 0.85},
-      {"name": "REST API", "level": 0.80},
-      {"name": "Git & GitHub", "level": 0.85},
-      {"name": "Clean Architecture", "level": 0.85},
-      {"name": "State Management", "level": 0.90},
-      {"name": "SQL/NoSQL", "level": 0.70},
+      {"name": "Flutter", "level": 0.95, "icon": Icons.flutter_dash},
+      {"name": "Dart", "level": 0.90, "icon": Icons.code},
+      {"name": "Firebase", "level": 0.85, "icon": Icons.cloud},
+      {"name": "Git & GitHub", "level": 0.85, "icon": FontAwesomeIcons.github},
+      {"name": "State Management", "level": 0.90, "icon": Icons.layers},
+      {"name": "Clean Architecture", "level": 0.85, "icon": Icons.architecture},
+      {"name": "REST API", "level": 0.80, "icon": Icons.api},
+      {"name": "SQL/NoSQL", "level": 0.70, "icon": Icons.storage},
     ];
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 100, horizontal: 50),
+      padding: EdgeInsets.symmetric(
+        vertical: isMobile ? 60 : 100,
+        horizontal: isMobile ? 24 : 50,
+      ),
       child: Column(
         children: [
           _buildHeader(),
           const SizedBox(height: 50),
-          Wrap(
-            spacing: 30,
-            runSpacing: 30,
-            alignment: WrapAlignment.center,
-            children: skills.map((skill) => _skillCard(skill)).toList(),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: skills.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: isMobile ? 2 : 4,
+              mainAxisSpacing: 15,
+              crossAxisSpacing: 15,
+              childAspectRatio: isMobile ? 1.1 : 1.3,
+            ),
+            itemBuilder: (context, index) {
+              return _skillCard(skills[index], index);
+            },
           ),
         ],
       ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.1),
@@ -52,46 +66,58 @@ class SkillsSection extends StatelessWidget {
     );
   }
 
-  Widget _skillCard(Map<String, dynamic> skill) {
+  Widget _skillCard(Map<String, dynamic> skill, int index) {
+    final bool isFontAwesome = skill["icon"] is IconData == false;
+
     return Container(
-      width: 250,
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.darkCard,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
+        color: AppColors.darkCard.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.primaryColor.withOpacity(0.1)),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            skill["name"],
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 15),
-          LinearProgressIndicator(
-            value: skill["level"],
-            backgroundColor: Colors.grey[800],
-            valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primaryColor),
-            minHeight: 8,
-            borderRadius: BorderRadius.circular(4),
-          ),
+          isFontAwesome
+              ? FaIcon(
+                  skill["icon"],
+                  color: AppColors.primaryColor,
+                  size: 28,
+                )
+              : Icon(
+                  skill["icon"],
+                  color: AppColors.primaryColor,
+                  size: 30,
+                ),
           const SizedBox(height: 10),
-          Align(
-            alignment: Alignment.centerRight,
+          Flexible(
             child: Text(
-              "${(skill["level"] * 100).toInt()}%",
-              style: const TextStyle(color: Colors.grey, fontSize: 14),
+              skill["name"],
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            "${(skill["level"] * 100).toInt()}%",
+            style: TextStyle(
+              color: AppColors.primaryColor.withOpacity(0.7),
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],
       ),
-    );
+    ).animate(delay: (index * 100).ms).fadeIn(duration: 500.ms).scale(
+          begin: const Offset(0.8, 0.8),
+          curve: Curves.easeOutBack,
+        );
   }
 }

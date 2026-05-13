@@ -31,7 +31,10 @@ class ServicesSection extends StatelessWidget {
     ];
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 100, horizontal: 50),
+      padding: EdgeInsets.symmetric(
+        vertical: MediaQuery.of(context).size.width < AppConstants.mobileBreakpoint ? 60 : 100,
+        horizontal: MediaQuery.of(context).size.width < AppConstants.mobileBreakpoint ? 24 : 50,
+      ),
       color: AppColors.darkBg,
       child: Column(
         children: [
@@ -41,7 +44,9 @@ class ServicesSection extends StatelessWidget {
             spacing: 30,
             runSpacing: 30,
             alignment: WrapAlignment.center,
-            children: services.map((s) => _serviceCard(s)).toList(),
+            children: List.generate(services.length, (index) {
+              return _serviceCard(services[index], index);
+            }),
           ),
         ],
       ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.1),
@@ -65,7 +70,7 @@ class ServicesSection extends StatelessWidget {
     );
   }
 
-  Widget _serviceCard(Map<String, dynamic> service) {
+  Widget _serviceCard(Map<String, dynamic> service, int index) {
     return Container(
       width: 280,
       padding: const EdgeInsets.all(30),
@@ -98,6 +103,6 @@ class ServicesSection extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ).animate(delay: (index * 100).ms).fadeIn(duration: 500.ms).slideY(begin: 0.2);
   }
 }

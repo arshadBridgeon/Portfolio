@@ -9,27 +9,18 @@ class ExperienceSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Map<String, String>> experiences = [
       {
-        "company": "Tech Solutions Inc.",
-        "role": "Senior Flutter Developer",
-        "duration": "2022 - Present",
-        "desc": "Leading a team of 5 developers to build high-scale enterprise applications. Improved app performance by 40%.",
-      },
-      {
-        "company": "Creative Apps Lab",
+        "company": "Total-X",
         "role": "Flutter Developer",
-        "duration": "2020 - 2022",
-        "desc": "Developed over 10 cross-platform mobile apps using Flutter and Firebase. Mentored junior developers.",
-      },
-      {
-        "company": "Startup Hub",
-        "role": "Junior Developer",
-        "duration": "2019 - 2020",
-        "desc": "Built MVP versions of multiple startup products. Gained deep knowledge in Dart and UI/UX.",
+        "duration": "1+ Year | Present",
+        "desc": "Developing high-performance, cross-platform mobile applications using Flutter and Firebase. Focusing on clean architecture and delivering seamless user experiences.",
       },
     ];
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 100, horizontal: 50),
+      padding: EdgeInsets.symmetric(
+        vertical: MediaQuery.of(context).size.width < AppConstants.mobileBreakpoint ? 60 : 100,
+        horizontal: MediaQuery.of(context).size.width < AppConstants.mobileBreakpoint ? 24 : 50,
+      ),
       color: AppColors.darkCard,
       child: Column(
         children: [

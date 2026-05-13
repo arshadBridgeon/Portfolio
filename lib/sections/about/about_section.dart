@@ -11,7 +11,10 @@ class AboutSection extends StatelessWidget {
     final isMobile = size.width < AppConstants.mobileBreakpoint;
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 100, horizontal: 50),
+      padding: EdgeInsets.symmetric(
+        vertical: isMobile ? 60 : 100,
+        horizontal: isMobile ? 24 : 50,
+      ),
       color: AppColors.darkCard,
       child: Column(
         children: [
@@ -20,7 +23,7 @@ class AboutSection extends StatelessWidget {
           isMobile
               ? Column(
                   children: [
-                    _buildAboutText(),
+                    _buildAboutText(isMobile),
                     const SizedBox(height: 50),
                     _buildStatsGrid(isMobile),
                   ],
@@ -28,7 +31,7 @@ class AboutSection extends StatelessWidget {
               : Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(child: _buildAboutText()),
+                    Expanded(child: _buildAboutText(isMobile)),
                     const SizedBox(width: 50),
                     Expanded(child: _buildStatsGrid(isMobile)),
                   ],
@@ -55,23 +58,25 @@ class AboutSection extends StatelessWidget {
     );
   }
 
-  Widget _buildAboutText() {
+  Widget _buildAboutText(bool isMobile) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "Professional Path",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+          style: TextStyle(fontSize: isMobile ? 20 : 24, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 20),
         Text(
           "I am a passionate Flutter Developer with over 3 years of experience in building mobile and web applications. My goal is to create seamless user experiences with clean and maintainable code.",
-          style: TextStyle(fontSize: 18, color: Colors.grey[400], height: 1.6),
+          style: TextStyle(fontSize: isMobile ? 16 : 18, color: Colors.grey[400], height: 1.6),
+          textAlign: isMobile ? TextAlign.center : TextAlign.start,
         ),
         const SizedBox(height: 20),
         Text(
           "I specialize in Dart, Firebase, and State Management. I love solving complex architectural challenges and building robust mobile applications.",
-          style: TextStyle(fontSize: 18, color: Colors.grey[400], height: 1.6),
+          style: TextStyle(fontSize: isMobile ? 16 : 18, color: Colors.grey[400], height: 1.6),
+          textAlign: isMobile ? TextAlign.center : TextAlign.start,
         ),
       ],
     );
@@ -82,21 +87,19 @@ class AboutSection extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       crossAxisCount: 2,
-      mainAxisSpacing: 20,
-      crossAxisSpacing: 20,
-      childAspectRatio: 1.5,
+      mainAxisSpacing: 15,
+      crossAxisSpacing: 15,
+      childAspectRatio: isMobile ? 1.1 : 1.5,
       children: [
-        _statCard("3+", "Years Experience"),
-        _statCard("50+", "Projects Completed"),
-        _statCard("20+", "Happy Clients"),
-        _statCard("10+", "Certifications"),
+        _statCard("1+", "Year Experience", isMobile),
+        _statCard("4+", "Projects Completed", isMobile),
       ],
     );
   }
 
-  Widget _statCard(String value, String label) {
+  Widget _statCard(String value, String label, bool isMobile) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(isMobile ? 12 : 20),
       decoration: BoxDecoration(
         color: AppColors.darkBg,
         borderRadius: BorderRadius.circular(15),
@@ -105,19 +108,26 @@ class AboutSection extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primaryColor,
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: isMobile ? 22 : 28,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primaryColor,
+              ),
             ),
           ),
           const SizedBox(height: 5),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 14, color: Colors.grey),
-            textAlign: TextAlign.center,
+          Flexible(
+            child: Text(
+              label,
+              style: TextStyle(fontSize: isMobile ? 12 : 14, color: Colors.grey),
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),

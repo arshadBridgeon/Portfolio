@@ -10,22 +10,22 @@ class ProjectsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<Map<String, String>> projects = [
       {
-        "title": "Car Rental App",
-        "description": "A high-performance car rental application with real-time availability tracking and payment integration.",
-        "image": "assets/images/project1.png",
-        "tech": "Flutter, Firebase, Stripe",
+        "title": "Rental Car Application",
+        "description": "A premium car rental platform featuring a sleek UI for browsing, booking, and managing luxury vehicle rentals.",
+        "image": "assets/images/rental_car.png",
+        "tech": "Flutter, Firebase, Cloud Firestore",
+      },
+      {
+        "title": "Blood Donation App",
+        "description": "A life-saving application connecting donors with recipients and blood banks in real-time with a clean, urgent-focused UI.",
+        "image": "assets/images/blood_donation.png",
+        "tech": "Flutter, Provider, Node.js",
       },
       {
         "title": "Pizza Delivery App",
-        "description": "An intuitive food delivery app focusing on pizza customization and live order tracking.",
-        "image": "assets/images/project2.png",
-        "tech": "Flutter, Riverpod, Node.js",
-      },
-      {
-        "title": "Student Management System",
-        "description": "A comprehensive system for tracking student attendance, grades, and schedules.",
-        "image": "assets/images/project1.png", // Reusing for now
-        "tech": "Flutter, Hive, SQLite",
+        "description": "A vibrant and fast-paced food delivery app with intuitive menus, customization options, and live order tracking.",
+        "image": "assets/images/pizza_delivery.png",
+        "tech": "Flutter, Riverpod, Firebase",
       },
     ];
 

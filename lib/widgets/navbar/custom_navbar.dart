@@ -1,6 +1,8 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+
 import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_theme.dart';
 import '../dialogs/pdf_viewer_dialog.dart';
@@ -17,39 +19,48 @@ class CustomNavbar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isMobile = MediaQuery.of(context).size.width < AppConstants.mobileBreakpoint;
+    final isMobile =
+        MediaQuery.of(context).size.width < AppConstants.mobileBreakpoint;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-      decoration: BoxDecoration(
-        color: AppColors.darkBg.withOpacity(0.8),
-        backgroundBlendMode: BlendMode.darken,
-        border: Border(
-          bottom: BorderSide(color: AppColors.primaryColor.withOpacity(0.1)),
-        ),
-      ),
-      child: Row(
-        children: [
-          const Spacer(),
-          if (!isMobile) ...[
-            _navItem("Home", 0),
-            _navItem("About", 1),
-            _navItem("Skills", 2),
-            _navItem("Services", 3),
-            _navItem("Projects", 4),
-            _navItem("Experience", 5),
-            _navItem("Contact", 7),
-            const SizedBox(width: 20),
-            _resumeButton(context),
-          ] else
-            IconButton(
-              icon: const Icon(Icons.menu, color: Colors.white),
-              onPressed: () {
-                // TODO: Show Drawer or Mobile Menu
-              },
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+          decoration: BoxDecoration(
+            color: AppColors.darkBg.withOpacity(0.3),
+            border: Border(
+              bottom: BorderSide(
+                color: AppColors.primaryColor.withOpacity(0.1),
+              ),
             ),
-          const SizedBox(width: 10),
-        ],
+          ),
+          child: Row(
+            children: [
+              const Spacer(),
+              if (!isMobile) ...[
+                _navItem("Home", 0),
+                _navItem("About", 1),
+                _navItem("Skills", 2),
+                _navItem("Services", 3),
+                _navItem("Projects", 4),
+                _navItem("Experience", 5),
+                _navItem("Contact", 6),
+                const SizedBox(width: 20),
+                _resumeButton(context),
+              ] else
+                Builder(
+                  builder: (context) => IconButton(
+                    icon: const Icon(Icons.menu, color: Colors.white),
+                    onPressed: () {
+                      Scaffold.of(context).openEndDrawer();
+                    },
+                  ),
+                ),
+              const SizedBox(width: 10),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -59,9 +70,8 @@ class CustomNavbar extends ConsumerWidget {
       onPressed: () {
         showDialog(
           context: context,
-          builder: (context) => const PdfViewerDialog(
-            pdfPath: 'assets/resume.pdf',
-          ),
+          builder: (context) =>
+              const PdfViewerDialog(pdfPath: 'assets/resume.pdf'),
         );
       },
       style: ElevatedButton.styleFrom(
@@ -124,8 +134,12 @@ class _AnimatedNavItemState extends State<_AnimatedNavItem> {
               duration: const Duration(milliseconds: 200),
               style: TextStyle(
                 fontSize: 16,
-                fontWeight: widget.isSelected ? FontWeight.bold : FontWeight.w500,
-                color: (widget.isSelected || _isHovered) ? AppColors.primaryColor : Colors.white70,
+                fontWeight: widget.isSelected
+                    ? FontWeight.bold
+                    : FontWeight.w500,
+                color: (widget.isSelected || _isHovered)
+                    ? AppColors.primaryColor
+                    : Colors.white70,
               ),
               child: Text(widget.title),
             ),
@@ -143,7 +157,7 @@ class _AnimatedNavItemState extends State<_AnimatedNavItem> {
                           color: AppColors.primaryColor.withOpacity(0.5),
                           blurRadius: 4,
                           offset: const Offset(0, 1),
-                        )
+                        ),
                       ]
                     : [],
               ),
